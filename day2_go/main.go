@@ -9,7 +9,7 @@ import (
 func main() {
 	initOutcomes()
 
-	file, err := os.ReadFile("sampleInput")
+	file, err := os.ReadFile("input")
 	if err != nil {
 		panic(err)
 	}
@@ -27,7 +27,7 @@ func main() {
 		}
 
 		match := convertLineToMatch(line)
-		fmt.Printf("Round {%d}: %d points\n", i, match.score())
+		fmt.Printf("Round %d: %d points\n", i, match.score())
 
 		totalScore += match.score()
 	}
