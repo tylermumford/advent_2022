@@ -9,7 +9,7 @@ import (
 func main() {
 	initOutcomes()
 
-	file, err := os.ReadFile("sampleInput")
+	file, err := os.ReadFile("input")
 	if err != nil {
 		panic(err)
 	}
