@@ -70,19 +70,6 @@ func initOutcomes() {
 	}
 }
 
-func printOutcomes() {
-	// Used this function to inspect the outcomes table.
-
-	i := 0
-	for opponent, in := range outcomes {
-		for player, score := range in {
-			fmt.Println("(If they play", opponent, "and I play", player, "then I get", score, "points.)")
-			i++
-		}
-	}
-	fmt.Println("Outcomes table has", i, "outcomes")
-}
-
 func (match match) scorePart1() int {
 	return outcomes[match.opponent][match.player]
 }
