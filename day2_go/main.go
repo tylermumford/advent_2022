@@ -9,7 +9,7 @@ import (
 func main() {
 	initOutcomes()
 
-	file, err := os.ReadFile("input")
+	file, err := os.ReadFile("sampleInput")
 	if err != nil {
 		panic(err)
 	}
@@ -19,20 +19,22 @@ func main() {
 
 	fmt.Println("Loaded", len(lines), "lines of input")
 
-	totalScore := 0
+	part1TotalScore := 0
+	part2TotalScore := 0
 
-	for i, line := range lines {
+	for _, line := range lines {
 		if line == "" {
 			continue
 		}
 
 		match := convertLineToMatch(line)
-		fmt.Printf("Round %d: %d points\n", i, match.score())
 
-		totalScore += match.score()
+		part1TotalScore += match.scorePart1()
+		part2TotalScore += match.scorePart2()
 	}
 
-	fmt.Println("Total score:", totalScore)
+	fmt.Println("Total score, part 1:", part1TotalScore)
+	fmt.Println("Total score, part 2:", part2TotalScore)
 }
 
 const rock = "rock"
@@ -42,12 +44,22 @@ const scissors = "scissors"
 type move string
 
 type match struct {
+	// opponent is the move our opponent plays
 	opponent move
-	player   move
+
+	// player is the move we should play, assumed in part 1
+	player move
+
+	// goal is the outcome we need according to part 2
+	goal outcome
+
+	// realMove is the move we need to play to get the outcome according to part 2
+	realMove move
 }
 
 type lookup map[move]map[move]int
 
+// outcomes is indexed by [opponent move] and then [player move]
 var outcomes lookup
 
 func initOutcomes() {
@@ -71,8 +83,12 @@ func printOutcomes() {
 	fmt.Println("Outcomes table has", i, "outcomes")
 }
 
-func (match match) score() int {
+func (match match) scorePart1() int {
 	return outcomes[match.opponent][match.player]
+}
+
+func (match match) scorePart2() int {
+	return outcomes[match.opponent][match.realMove]
 }
 
 var moveEncoding = map[string]move{
@@ -84,14 +100,44 @@ var moveEncoding = map[string]move{
 	"Z": scissors,
 }
 
+var outcomeEncoding = map[string]outcome{
+	"X": lose,
+	"Y": draw,
+	"Z": win,
+}
+
+const win = "win"
+const draw = "draw"
+const lose = "lose"
+
+type outcome string
+
 func convertLineToMatch(line string) match {
-	moves := strings.Split(line, " ")
-	if len(moves) != 2 {
-		panic("A line didn't have 2 moves: " + line)
+	symbols := strings.Split(line, " ")
+	if len(symbols) != 2 {
+		panic("A line didn't have 2 symbols: " + line)
 	}
 
+	opponent := moveEncoding[symbols[0]]
+	goal := outcomeEncoding[symbols[1]]
+
 	return match{
-		opponent: moveEncoding[moves[0]],
-		player:   moveEncoding[moves[1]],
+		opponent: opponent,
+		player:   moveEncoding[symbols[1]],
+
+		goal:     goal,
+		realMove: deducePlayerMove(goal, opponent),
 	}
+}
+
+// Example:
+// howToReachOutcome[rock][win] = paper
+var howToReachOutcome = map[move]map[outcome]move{
+	rock:     {win: paper, lose: scissors, draw: rock},
+	paper:    {win: scissors, lose: rock, draw: paper},
+	scissors: {win: rock, lose: paper, draw: scissors},
+}
+
+func deducePlayerMove(goal outcome, opponent move) move {
+	return howToReachOutcome[opponent][goal]
 }
