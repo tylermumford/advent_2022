@@ -52,7 +52,13 @@ func (s span) overlapsWith(other span) bool {
 	hasBottomOverlap := (s.from <= other.from) && (other.from <= s.to)
 	hasTopOverlap := (s.from <= other.to) && (other.to <= s.to)
 
-	return hasBottomOverlap || hasTopOverlap
+	if hasBottomOverlap || hasTopOverlap {
+		return true
+	}
+
+	// The above returns true for partial overlaps, but not for full overlaps.
+
+	return s.fullyContains(other) || other.fullyContains(s)
 }
 
 func printOverlapCount(pairs []pair) {
