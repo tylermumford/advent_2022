@@ -46,13 +46,8 @@ func printPrioritySum(input []string) {
 
 	for _, str := range input {
 		itemCode := itemInCommon(str)
-		fmt.Printf("(%s ", string(itemCode))
-
 		prioritySum += priority(itemCode)
-		fmt.Printf("%d)", priority(itemCode))
 	}
-
-	fmt.Println()
 
 	fmt.Println("Priority sum =", prioritySum)
 }
