@@ -13,11 +13,13 @@ func main() {
 
 	fmt.Println("Sample input:")
 	printPrioritySum(inputs.sample)
+	printBadgePrioritySum(inputs.sample)
 
 	fmt.Println()
 
 	fmt.Println("Main input:")
 	printPrioritySum(inputs.input)
+	printBadgePrioritySum(inputs.input)
 }
 
 var inputs struct {
@@ -88,4 +90,37 @@ func priority(c rune) int {
 	}
 
 	panic("rune out of range")
+}
+
+func printBadgePrioritySum(input []string) {
+	i := 0
+	j := 3
+
+	badgePrioritySum := 0
+
+	for j <= len(input) {
+		group := input[i:j]
+		badge := badgeForGroup(group)
+
+		badgePrioritySum += priority(badge)
+
+		i += 3
+		j += 3
+	}
+
+	fmt.Println("Badge priority sum:", badgePrioritySum)
+}
+
+func badgeForGroup(groupOfThree []string) rune {
+	one := groupOfThree[0]
+	two := groupOfThree[1]
+	three := groupOfThree[2]
+
+	for _, c := range one {
+		if strings.ContainsRune(two, c) && strings.ContainsRune(three, c) {
+			return c
+		}
+	}
+
+	panic("No badge found, somehow")
 }
