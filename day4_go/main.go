@@ -2,8 +2,6 @@ package main
 
 import (
 	"fmt"
-	"os"
-	"strings"
 )
 
 func main() {
@@ -12,29 +10,34 @@ func main() {
 	fmt.Println("Sample has", len(inputs.sample), "lines, and main input has", len(inputs.input))
 
 	fmt.Println("Sample input:")
+	printFullOverlapCount(inputs.sample)
 
 	fmt.Println()
 
 	fmt.Println("Main input:")
+	printFullOverlapCount(inputs.input)
 }
 
-var inputs struct {
-	sample []string
-	input  []string
+func printFullOverlapCount(pairs []pair) {
+	count := 0
+
+	for _, p := range pairs {
+		if p.hasFullOverlap() {
+			count++
+		}
+	}
+
+	fmt.Println(count, "pairs with a full overlap")
 }
 
-func loadInputs() {
-	rawSample, err := os.ReadFile("sampleInput")
-	if err != nil {
-		panic(err)
+func (p pair) hasFullOverlap() bool {
+	return p.first.fullyContains(p.second) || p.second.fullyContains(p.first)
+}
+
+func (s span) fullyContains(other span) bool {
+	if other.from < s.from || other.to > s.to {
+		return false
 	}
 
-	inputs.sample = strings.Split(strings.TrimSpace(string(rawSample)), "\n")
-
-	rawInput, err := os.ReadFile("input")
-	if err != nil {
-		panic(err)
-	}
-
-	inputs.input = strings.Split(strings.TrimSpace(string(rawInput)), "\n")
+	return true
 }
