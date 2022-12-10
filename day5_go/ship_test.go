@@ -97,7 +97,7 @@ func TestTopCrates(t *testing.T) {
 	}
 }
 
-func TestPerformCommand(t *testing.T) {
+func TestPerformCommand_default(t *testing.T) {
 	s := parseShip(sampleShip)
 	c := command{
 		n:    2,
@@ -114,5 +114,42 @@ func TestPerformCommand(t *testing.T) {
 
 	if !reflect.DeepEqual(s, expect) {
 		t.Errorf("performCommand failed, expected\n%v\nbut got\n%v", expect, s)
+	}
+}
+
+func TestPerformCommand_9001(t *testing.T) {
+	s := parseShip(sampleShip)
+	s.setIsCrateMover9001(true)
+	c := command{
+		n:    2,
+		from: 2,
+		to:   3,
+	}
+	expect := NewShipWithStacks([]stack{
+		{"Z", "N"},
+		{"M"},
+		{"P", "C", "D"},
+	})
+	expect.setIsCrateMover9001(true)
+
+	s.performCommand(c)
+
+	if !reflect.DeepEqual(s, expect) {
+		t.Errorf("performCommand failed, expected\n%#v\n%v\nbut got\n%#v\n%v", expect, expect, s, s)
+	}
+}
+
+// This may seem silly, but my first version of this method failed
+// because it wasn't using a pointer as its method parameter!
+func TestSetIsCrateMover9001(t *testing.T) {
+	s := NewShip(2)
+
+	s.setIsCrateMover9001(true)
+
+	got := s.isCrateMover9001
+	expect := true
+
+	if got != expect {
+		t.Errorf("Expected %v, but got %v", expect, got)
 	}
 }

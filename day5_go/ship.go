@@ -31,7 +31,7 @@ func (s ship) stackCount() int {
 	return len(s.stacks)
 }
 
-func (s ship) setIsCrateMover9001(value bool) {
+func (s *ship) setIsCrateMover9001(value bool) {
 	s.isCrateMover9001 = value
 }
 
@@ -74,6 +74,11 @@ func (s ship) performCommands(commands []command) {
 }
 
 func (s ship) performCommand(c command) {
+	if s.isCrateMover9001 {
+		s.moveAllCrates(c)
+		return
+	}
+
 	for i := 0; i < c.n; i++ {
 		s.moveSingleCrate(c)
 	}
@@ -89,4 +94,16 @@ func (s ship) moveSingleCrate(c command) {
 
 	s.stacks[c.from-1] = fromStack[0 : len(fromStack)-1]
 	s.stacks[c.to-1] = append(toStack, crate)
+}
+
+func (s ship) moveAllCrates(c command) {
+	fromStack := s.stacks[c.from-1]
+	toStack := s.stacks[c.to-1]
+
+	stackLen := len(fromStack)
+	start := stackLen - c.n
+	crates := fromStack[start:stackLen]
+
+	s.stacks[c.from-1] = fromStack[0:start]
+	s.stacks[c.to-1] = toStack.append(crates)
 }
