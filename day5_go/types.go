@@ -1,11 +1,5 @@
 package main
 
-// A domain represents complete input data to the advent of code solution.
-type domain struct {
-	ship     ship
-	commands commands
-}
-
 type stackId int
 
 // stack is a slice of crates, in order from bottom to top

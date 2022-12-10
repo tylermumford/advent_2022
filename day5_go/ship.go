@@ -46,6 +46,12 @@ func (s ship) topCrates() string {
 	return result
 }
 
+func (s ship) performCommands(commands []command) {
+	for _, c := range commands {
+		s.performCommand(c)
+	}
+}
+
 func (s ship) performCommand(c command) {
 	for i := 0; i < c.n; i++ {
 		s.moveSingleCrate(c)
