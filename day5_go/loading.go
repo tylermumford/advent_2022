@@ -31,10 +31,16 @@ func load(filename string) domain {
 func fileToDomain(file string) domain {
 	sections := strings.Split(file, "\n\n")
 
-	return domain{
+	d := domain{
 		ship:     parseShip(sections[0]),
 		commands: parseCommands(sections[1]),
+
+		ship9001: parseShip(sections[0]),
 	}
+
+	d.ship9001.isCrateMover9001(true)
+
+	return d
 }
 
 func parseShip(input string) ship {

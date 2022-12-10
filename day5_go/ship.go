@@ -14,6 +14,10 @@ func NewShip(size int) ship {
 	return make(ship, size)
 }
 
+func (s ship) isCrateMover9001(value bool) {
+	// TODO
+}
+
 func (s ship) String() string {
 	b := strings.Builder{}
 
