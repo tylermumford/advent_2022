@@ -14,11 +14,11 @@ var sampleShip = `
 `
 
 func Exampleship_String() {
-	s := ship{
+	s := NewShipWithStacks([]stack{
 		{"Z", "N"},
 		{"M", "C", "D"},
 		{"P"},
-	}
+	})
 	fmt.Println(s)
 	//Output:
 	//1: Z,N
@@ -27,20 +27,20 @@ func Exampleship_String() {
 }
 
 func Exampleship_String_superSimple() {
-	s := ship{
+	s := NewShipWithStacks([]stack{
 		{"A", "B"},
-	}
+	})
 	fmt.Println(s)
 	//Output:
 	//1: A,B
 }
 
 func TestParseShip(t *testing.T) {
-	expected := ship{
+	expected := NewShipWithStacks([]stack{
 		{"Z", "N"},
 		{"M", "C", "D"},
 		{"P"},
-	}
+	})
 
 	got := parseShip(sampleShip)
 
@@ -104,11 +104,11 @@ func TestPerformCommand(t *testing.T) {
 		from: 2,
 		to:   3,
 	}
-	expect := ship{
+	expect := NewShipWithStacks([]stack{
 		{"Z", "N"},
 		{"M"},
 		{"P", "D", "C"},
-	}
+	})
 
 	s.performCommand(c)
 

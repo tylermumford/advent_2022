@@ -6,31 +6,48 @@ import (
 )
 
 // A ship is a slice of stacks of crates.
-type ship []stack
+type ship struct {
+	stacks           []stack
+	isCrateMover9001 bool
+}
 
 // Returns a new ship. The size parameter is how
 // many stacks are on the ship.
 func NewShip(size int) ship {
-	return make(ship, size)
+	return ship{
+		stacks:           make([]stack, size),
+		isCrateMover9001: false,
+	}
 }
 
-func (s ship) isCrateMover9001(value bool) {
-	// TODO
+// Helps to create customized ships in code.
+func NewShipWithStacks(stacks []stack) ship {
+	s := NewShip(0)
+	s.stacks = stacks
+	return s
+}
+
+func (s ship) stackCount() int {
+	return len(s.stacks)
+}
+
+func (s ship) setIsCrateMover9001(value bool) {
+	s.isCrateMover9001 = value
 }
 
 func (s ship) String() string {
 	b := strings.Builder{}
 
-	for i, stack := range s {
+	for i, stack := range s.stacks {
 		joined := strings.Join(stack, ",")
 		fmt.Fprintf(&b, "%d: %v", i+1, joined)
 
-		if i < len(s)-1 {
+		if i < len(s.stacks)-1 {
 			b.WriteString("\n")
 		}
 	}
 
-	if len(s) == 0 {
+	if len(s.stacks) == 0 {
 		b.WriteString("(empty ship)")
 	}
 
@@ -38,12 +55,12 @@ func (s ship) String() string {
 }
 
 func (s ship) AddCrate(c crate, i stackId) {
-	s[i] = append(s[i], c)
+	s.stacks[i] = append(s.stacks[i], c)
 }
 
 func (s ship) topCrates() string {
 	result := ""
-	for _, stack := range s {
+	for _, stack := range s.stacks {
 		top := stack[len(stack)-1]
 		result = result + top
 	}
@@ -65,11 +82,11 @@ func (s ship) performCommand(c command) {
 // Ignores the n parameter and just moves the top crate
 // from one stack to another.
 func (s ship) moveSingleCrate(c command) {
-	fromStack := s[c.from-1]
-	toStack := s[c.to-1]
+	fromStack := s.stacks[c.from-1]
+	toStack := s.stacks[c.to-1]
 
 	crate := fromStack[len(fromStack)-1]
 
-	s[c.from-1] = fromStack[0 : len(fromStack)-1]
-	s[c.to-1] = append(toStack, crate)
+	s.stacks[c.from-1] = fromStack[0 : len(fromStack)-1]
+	s.stacks[c.to-1] = append(toStack, crate)
 }

@@ -38,7 +38,7 @@ func fileToDomain(file string) domain {
 		ship9001: parseShip(sections[0]),
 	}
 
-	d.ship9001.isCrateMover9001(true)
+	d.ship9001.setIsCrateMover9001(true)
 
 	return d
 }
