@@ -36,3 +36,30 @@ func (s ship) String() string {
 func (s ship) AddCrate(c crate, i stackId) {
 	s[i] = append(s[i], c)
 }
+
+func (s ship) topCrates() string {
+	result := ""
+	for _, stack := range s {
+		top := stack[len(stack)-1]
+		result = result + top
+	}
+	return result
+}
+
+func (s ship) performCommand(c command) {
+	for i := 0; i < c.n; i++ {
+		s.moveSingleCrate(c)
+	}
+}
+
+// Ignores the n parameter and just moves the top crate
+// from one stack to another.
+func (s ship) moveSingleCrate(c command) {
+	fromStack := s[c.from-1]
+	toStack := s[c.to-1]
+
+	crate := fromStack[len(fromStack)-1]
+
+	s[c.from-1] = fromStack[0 : len(fromStack)-1]
+	s[c.to-1] = append(toStack, crate)
+}

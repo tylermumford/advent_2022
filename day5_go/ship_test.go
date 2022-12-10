@@ -86,3 +86,33 @@ func TestParseCommand(t *testing.T) {
 		}
 	}
 }
+
+func TestTopCrates(t *testing.T) {
+	s := parseShip(sampleShip)
+
+	top := s.topCrates()
+
+	if top != "NDP" {
+		t.Errorf("Expected %v but got %v", "NDP", top)
+	}
+}
+
+func TestPerformCommand(t *testing.T) {
+	s := parseShip(sampleShip)
+	c := command{
+		n:    2,
+		from: 2,
+		to:   3,
+	}
+	expect := ship{
+		{"Z", "N"},
+		{"M"},
+		{"P", "D", "C"},
+	}
+
+	s.performCommand(c)
+
+	if !reflect.DeepEqual(s, expect) {
+		t.Errorf("performCommand failed, expected\n%v\nbut got\n%v", expect, s)
+	}
+}
