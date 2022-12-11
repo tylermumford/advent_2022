@@ -5,9 +5,29 @@ namespace Day10;
 /// </summary>
 public class Cpu
 {
+    // X starts at 1, as defined by the day's story.
+    private int registerX = 1;
+
     public StateHistory Execute(IEnumerable<IInstruction> program)
     {
-        return new();
-        // TODO
+        var history = new StateHistory();
+
+        foreach (var op in program)
+        {
+            if (op is Noop)
+            {
+                history.Push(x: registerX);
+                continue;
+            }
+            else if (op is Addx add)
+            {
+                history.Push(x: registerX);
+                registerX += add.v;
+                history.Push(x: registerX);
+                continue;
+            }
+        }
+
+        return history;
     }
 }
