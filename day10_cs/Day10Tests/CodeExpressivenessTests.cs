@@ -65,4 +65,24 @@ public class CodeExpressivenessTests
         }
         catch {}
     }
+
+    [Fact]
+    public void CrtCanDrawPixels()
+    {
+        var screen = new Crt();
+
+        screen.Cycle(1);
+        screen.Cycle(8);
+
+        screen.Image();
+    }
+
+    [Fact]
+    public void CpuCanTalkToAScreen()
+    {
+        var cpu = new Cpu();
+        var screen = new Crt();
+
+        cpu.DuringCycle += screen.HandleSignal;
+    }
 }

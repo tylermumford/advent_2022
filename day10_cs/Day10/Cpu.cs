@@ -14,6 +14,8 @@ public class Cpu
 
         foreach (var op in program)
         {
+            OnDuringCycle(new CpuCycleEventArgs(registerX));
+
             if (op is Noop)
             {
                 history.Push(x: registerX);
@@ -29,5 +31,12 @@ public class Cpu
         }
 
         return history;
+    }
+
+    public event EventHandler<CpuCycleEventArgs> DuringCycle;
+
+    protected void OnDuringCycle(CpuCycleEventArgs e)
+    {
+        DuringCycle?.Invoke(this, e);
     }
 }
