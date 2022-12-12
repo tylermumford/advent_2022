@@ -36,7 +36,7 @@ public class Crt
 
 		MaybeWrap();
 		Buffer.Append(next);
-		NextPixel++;
+		IncrementNextPixel();
 	}
 
 	private void MaybeWrap()
@@ -44,10 +44,15 @@ public class Crt
 		// Remember that pixels are numbered
 		// 0  .. 39
 		// 40 .. 79
-		if (NextPixel >= 40 && NextPixel % 40 == 0)
+		if (NextPixel % 40 == 0 && Buffer.Length > 0)
 		{
 			Buffer.Append("\n");
 		}
+	}
+
+	private void IncrementNextPixel()
+	{
+		NextPixel = (NextPixel + 1) % 40;
 	}
 
 	/// <summary>Returns the display of the Crt, as text.</summary>

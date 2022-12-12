@@ -14,16 +14,18 @@ public class Cpu
 
         foreach (var op in program)
         {
-            OnDuringCycle(new CpuCycleEventArgs(registerX));
-
             if (op is Noop)
             {
+                OnDuringCycle(new CpuCycleEventArgs(registerX));
                 history.Push(x: registerX);
                 continue;
             }
             else if (op is Addx add)
             {
+                OnDuringCycle(new CpuCycleEventArgs(registerX));
                 history.Push(x: registerX);
+                
+                OnDuringCycle(new CpuCycleEventArgs(registerX));
                 registerX += add.v;
                 history.Push(x: registerX);
                 continue;
