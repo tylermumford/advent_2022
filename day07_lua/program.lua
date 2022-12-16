@@ -14,8 +14,11 @@ function solve(filename)
     local dirsizes = getdirsizes(filename)
     print(tableCount(dirsizes), "directories")
 
-    --local smallEnoughDirs = withoutLargeDirs(dirsizes, 100000)
-    --print(tableCount(smallEnoughDirs), "small directories")
+    local smallEnoughDirs = withoutLargeDirs(dirsizes, 100000)
+    print(tableCount(smallEnoughDirs), "small directories")
+
+    local sum = tableSum(smallEnoughDirs)
+    print(sum..":", "sum of the small directories files' sizes")
 end
 
 function getdirsizes(filename)
@@ -100,6 +103,14 @@ function tableCount(t)
         n = n + 1
     end
     return n
+end
+
+function tableSum(t)
+    local sum = 0
+    for _,v in pairs(t) do
+        sum = sum + v
+    end
+    return sum
 end
 
 -- STRING METHODS
