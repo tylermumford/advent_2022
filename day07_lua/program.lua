@@ -1,5 +1,3 @@
-prof = require 'ProFi'
-
 function main()
     print("Day 7")
 
@@ -9,7 +7,6 @@ end
 
 function solve(filename)
     print("\n\n## SOLVING ",filename,"\n")
-    io.flush()
 
     local dirsizes = getdirsizes(filename)
     print(tableCount(dirsizes), "directories")
@@ -18,7 +15,24 @@ function solve(filename)
     print(tableCount(smallEnoughDirs), "small directories")
 
     local sum = tableSum(smallEnoughDirs)
-    print(sum..":", "sum of the small directories files' sizes")
+    print(sum, "sum of the small directories files' sizes")
+
+    local used = dirsizes["/"]
+    print(used, "bytes used in total")
+
+    local const total = 70000000
+    local free = total - used
+    assert(free > 0)
+    local const updateRequires = 30000000
+    local needToDelete = updateRequires - free
+    print(needToDelete, "need to delete (bytes)")
+
+    local dirToDelete, size = tableSmallestDirToDelete(
+        dirsizes,
+        needToDelete
+    )
+    print(size, "size of smallest dir to delete ("..dirToDelete..")")
+
 end
 
 function getdirsizes(filename)
@@ -112,6 +126,17 @@ function tableSum(t)
     end
     return sum
 end
+
+function tableSmallestDirToDelete(t, needToDelete)
+    d, smallest = "/", t["/"]
+    for dirname, size in pairs(t) do
+        if size < smallest and size >= needToDelete then
+            d, smallest = dirname, size
+        end
+    end
+    return d, smallest
+end
+
 
 -- STRING METHODS
 
