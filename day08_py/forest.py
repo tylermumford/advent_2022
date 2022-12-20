@@ -16,6 +16,18 @@ class Forest:
 
         return "".join(result)
 
+    def scenic_str(self):
+        result = []
+
+        for line in self.trees:
+            for t in line:
+                result.append(str(t.scenic_score) + '\t')
+
+            result.append('\n')
+
+        return "".join(result)
+
+
     def parse(self, data):
         for l, line in enumerate(data):
             treeRow = []
@@ -38,11 +50,14 @@ class Forest:
             self.analyzeTree(t)
 
     def analyzeTree(self, t):
-        """Determine whether t is hidden or visible."""
+        """Determine whether t is hidden or visible, and set its scenic score."""
         # Remember that Trees are visible by default.
         if self.is_on_edge(t):
             t.hidden = False
+            t.scenic_score = 0
             return
+
+        self.set_scenic_score(t)
 
         is_totally_hidden = True
         for direction in list(Direction):
@@ -61,23 +76,14 @@ class Forest:
         return top or bottom or left or right
 
     def is_visible(self, direction, t):
-        """Primary logic of the program.
+        """Primary logic of part 1.
 
         A tree is visible from a given direction if
         the other trees on the way to the edge of the
         forest are stricly smaller than the subject
         tree."""
 
-        if direction is Direction.EAST:
-            n = lambda line, col: (line, col + 1)
-        elif direction is Direction.WEST:
-            n = lambda line, col: (line, col - 1)
-        elif direction is Direction.NORTH:
-            n = lambda line, col: (line - 1, col)
-        elif direction is Direction.SOUTH:
-            n = lambda line, col: (line + 1, col)
-        else:
-            return False
+        n = direction.step
 
         nextLine, nextCol = t.line, t.col
 
@@ -100,3 +106,37 @@ class Forest:
             return True
 
         return False
+
+    def set_scenic_score(self, t):
+        score = 1
+
+        for direction in list(Direction):
+            score *= self.calculate_scenic_score(t, direction)
+
+        t.scenic_score = score
+
+    def calculate_scenic_score(self, t, direction):
+        """Primary logic of part 2."""
+        nextLine, nextCol = t.line, t.col
+
+        visible_count = 0
+
+        while True:
+            # Continue visiting trees in the direction given
+            nextLine, nextCol = direction.step(nextLine, nextCol)
+            if self.is_out_of_range(nextLine, nextCol):
+                break
+
+            distant_tree = self.trees[nextLine][nextCol]
+            visible_count += 1
+
+            if distant_tree.height < t.height:
+                continue
+            else:
+                break
+
+        return visible_count
+
+    def max_scenic_score(self):
+        return max([t.scenic_score for t in self.all_trees()])
+

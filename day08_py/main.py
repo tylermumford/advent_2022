@@ -7,7 +7,9 @@ def main(file):
 
     f.analyze()
 
-    print("Visible count:", f.count_visible(), "\n")
+    print(file)
+    print("Visible count:", f.count_visible())
+    print("Highest scenic score:", f.max_scenic_score(), "\n")
     print(str(f))
 
 if __name__ == '__main__':
