@@ -1,4 +1,5 @@
 from tree import Tree
+from direction import Direction
 
 class Forest:
     def __init__(self):
@@ -42,7 +43,14 @@ class Forest:
         if self.is_on_edge(t):
             t.hidden = False
             return
-        pass
+
+        is_totally_hidden = True
+        for direction in list(Direction):
+            if self.is_visible(direction, t):
+                t.hidden = False
+                return
+
+        t.hidden = True
 
     def is_on_edge(self, t):
         top = t.line == 0
@@ -51,3 +59,44 @@ class Forest:
         right = t.col == len(self.trees) - 1
 
         return top or bottom or left or right
+
+    def is_visible(self, direction, t):
+        """Primary logic of the program.
+
+        A tree is visible from a given direction if
+        the other trees on the way to the edge of the
+        forest are stricly smaller than the subject
+        tree."""
+
+        if direction is Direction.EAST:
+            n = lambda line, col: (line, col + 1)
+        elif direction is Direction.WEST:
+            n = lambda line, col: (line, col - 1)
+        elif direction is Direction.NORTH:
+            n = lambda line, col: (line - 1, col)
+        elif direction is Direction.SOUTH:
+            n = lambda line, col: (line + 1, col)
+        else:
+            return False
+
+        nextLine, nextCol = t.line, t.col
+
+        while True:
+            nextLine, nextCol = n(nextLine, nextCol)
+            if self.is_out_of_range(nextLine, nextCol):
+                return True
+
+            nextTree = self.trees[nextLine][nextCol]
+
+            if nextTree.height >= t.height:
+                return False
+        pass
+
+    def is_out_of_range(self, line, col):
+        if line < 0 or line >= len(self.trees):
+            return True
+
+        if col < 0 or col >= len(self.trees[0]):
+            return True
+
+        return False
