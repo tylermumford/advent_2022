@@ -2,7 +2,7 @@ class Tree:
     def __init__(self, height, line=0, col=0):
         self.height = height
         self.line = line
-        self.col = col 
+        self.col = col
         self.hidden = False
 
     def __str__(self):
