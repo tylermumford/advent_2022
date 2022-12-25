@@ -17,7 +17,7 @@ class ExpressionTests(unittest.TestCase):
 
     def test_canGetTailVisits(self):
         w = World()
-        w.run('')
+        w.run([])
         0 <= w.distinctTailPositions
 
     def test_canTellWorldToShowItsWork(self):
