@@ -1,27 +1,27 @@
 import unittest
-from world import World
+from rope import Rope
 from direction import Direction
 from command import Command
 
 class ExpressionTests(unittest.TestCase):
 
-    # Tests about the world
+    # Tests about ropes
 
-    def test_canCreateAWorld(self):
-        World()
+    def test_canCreateARope(self):
+        Rope()
 
-    def test_canSendInputToWorld(self):
+    def test_canSendInputToRope(self):
         data = []
-        w = World()
-        w.run(data)
+        r = Rope()
+        r.run(data)
 
     def test_canGetTailVisits(self):
-        w = World()
-        w.run([])
-        0 <= w.distinctTailPositions
+        r = Rope()
+        r.run([])
+        0 <= r.distinctTailPositions
 
-    def test_canTellWorldToShowItsWork(self):
-        World(visible=True)
+    def test_canTellRopeToShowItsWork(self):
+        Rope(visible=True)
 
     # Tests about commands
 

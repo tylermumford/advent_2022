@@ -1,7 +1,7 @@
 import logging
 from direction import Direction
 
-class World():
+class Rope():
     def __init__(self, visible=False):
         self.visible = visible
 

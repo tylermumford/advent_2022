@@ -1,5 +1,5 @@
 import unittest
-from world import *
+from rope import *
 from direction import Direction
 from command import Command
 import logging
@@ -25,61 +25,61 @@ class RunTests(unittest.TestCase):
         self.assertTrue(a == b)
 
     def test_NoMovement(self):
-        w = World()
+        r = Rope()
 
-        w.run([])
+        r.run([])
 
         # The tail starts somewhere, and that counts
-        self.assertEqual(w.distinctTailPositions, 1)
+        self.assertEqual(r.distinctTailPositions, 1)
 
     def test_RightTwo(self):
-        w = World()
+        r = Rope()
 
-        w.run([Command('R', 2)])
+        r.run([Command('R', 2)])
 
-        self.assertEqual(w.distinctTailPositions, 2)
+        self.assertEqual(r.distinctTailPositions, 2)
 
     def test_DownTwo(self):
-        w = World()
+        r = Rope()
 
-        w.run([Command('D', 2)])
+        r.run([Command('D', 2)])
 
-        self.assertEqual(w.distinctTailPositions, 2)
+        self.assertEqual(r.distinctTailPositions, 2)
 
     def test_UpTwo(self):
-        w = World()
+        r = Rope()
 
-        w.run([Command('U', 2)])
+        r.run([Command('U', 2)])
 
-        self.assertEqual(w.distinctTailPositions, 2)
+        self.assertEqual(r.distinctTailPositions, 2)
 
     def test_LeftTwo(self):
-        w = World()
+        r = Rope()
 
-        w.run([Command('L', 2)])
+        r.run([Command('L', 2)])
 
-        self.assertEqual(w.distinctTailPositions, 2)
+        self.assertEqual(r.distinctTailPositions, 2)
 
     def test_LeftThree(self):
-        w = World()
+        r = Rope()
 
-        w.run([Command('L', 3)])
+        r.run([Command('L', 3)])
 
-        self.assertEqual(w.distinctTailPositions, 3)
+        self.assertEqual(r.distinctTailPositions, 3)
 
     def test_UpThree(self):
-        w = World()
+        r = Rope()
 
-        w.run([Command('U', 3)])
+        r.run([Command('U', 3)])
 
-        self.assertEqual(w.distinctTailPositions, 3)
+        self.assertEqual(r.distinctTailPositions, 3)
 
     def test_TwoDirections(self):
-        w = World()
+        r = Rope()
 
-        w.run([Command('U', 3), Command('R', 2)])
+        r.run([Command('U', 3), Command('R', 2)])
 
-        self.assertEqual(w.distinctTailPositions, 4)
+        self.assertEqual(r.distinctTailPositions, 4)
 
     def test_mv(self):
         self.assertEqual(mv((0, 0), Direction.RIGHT), (1, 0))
