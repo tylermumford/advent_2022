@@ -8,7 +8,7 @@ class World():
         self.head = (0,0)
         self.tail = (0,0)
 
-        self.visited = set((0,0))
+        self.visited = set([(0,0)])
 
     @property
     def distinctTailPositions(self):
@@ -32,6 +32,8 @@ class World():
         self.head = mv(self.head, direction)
         self.stepTail()
 
+        self._draw()
+
     def stepTail(self):
         gap = dist(self.head, self.tail)
         logging.debug(f"gap is {gap}")
@@ -40,12 +42,40 @@ class World():
             self.catchUp()
 
     def catchUp(self):
-        dx = distx(self.tail, self.head)
-        x = self.tail[0] + (1 if dx > 1 else 0)
-        self.tail = (x, self.tail[1])
+        logging.debug("catching up")
+        startValue = self.tail
 
-        # TODO: dy, y
+        dx = distx(self.tail, self.head)
+        dx = abs(dx) / (dx if dx != 0 else 1)
+        x = self.tail[0] + dx
+
+        dy = disty(self.tail, self.head)
+        dy = abs(dy) / (dy if dy != 0 else 1)
+        y = self.tail[1] + dy
+
+        self.tail = (x, y)
+
+        newValue = self.tail
+        logging.debug(f"caught up by moving from {startValue} to {newValue}")
+
         self.visited.add(self.tail)
+
+    def _draw(self):
+        if not self.visible:
+            return
+
+        image = []
+
+        for y in range(9, -2, -1):
+            for x in range(-2, 9):
+                point = '.'
+                if (x,y) in self.visited: point = '#'
+                if (x,y) == self.tail: point = 'T'
+                if (x,y) == self.head: point = 'H'
+                image.append(point)
+            image.append('\n')
+
+        print(''.join(image))
 
     def _p(self, args):
         if self.visible:
@@ -55,9 +85,14 @@ def mv(pair, direction):
     'Move the coordinates in `pair` one step in the `direction` given.'
     if direction == Direction.RIGHT:
         return pair[0] + 1, pair[1]
+    if direction == Direction.LEFT:
+        return pair[0] - 1, pair[1]
+    if direction == Direction.UP:
+        return pair[0], pair[1] + 1
+    if direction == Direction.DOWN:
+        return pair[0], pair[1] - 1
 
-    raise f"{direction} not supported by mv function"
-    # TODO: More directions
+    raise NotImplementedError(f"{direction} not supported by mv function")
 
 def dist(pair1, pair2):
     horiz = abs(pair1[0] - pair2[0])
