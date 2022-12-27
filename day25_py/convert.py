@@ -1,4 +1,6 @@
-# Written to be run by pytest
+# toDecimal and toSnafu are the main exports of this module.
+# TestConvert is a class of tests that test those functions,
+# designed to be runnable by pytest.
 
 import math
 import pytest
@@ -42,50 +44,6 @@ class TestConvert:
         s = toSnafu(decimal)
         assert s == expect, f"Expected {decimal}->'{expect}', but got '{s}'"
 
-def toSnafu(n):
-    "Converts n (decimal) to a SNAFU string."
-
-    if n == 0: return "0"
-
-    # digits, as numbers, in order from least significant to most
-    digits = []
-
-    # Convert to base 5, with regular digits
-
-    while n:
-        count = n % 5
-        digits.append(count)
-        n = n // 5
-
-    # Convert the digits to SNAFU
-
-    singleDigit = len(digits) == 1
-    for i, digit in enumerate(digits):
-        if digit in [3, 4, 5] and not singleDigit:
-            if i + 1 == len(digits): digits.append(0)
-            digits[i + 1] += 1
-
-    symbols = {
-            0: 0,
-            1: 1,
-            2: 2,
-            3: "=",
-            4: "-",
-            5: 0,    # 5 can occur if something carries into a 4
-    }
-
-    digits.reverse()
-    print(digits)
-    digits = [symbols[d] for d in digits]
-    digits = [str(d) for d in digits]
-    return "".join(digits)
-
-def powersOfFive():
-    i = 0
-    while True:
-        yield 5 ** i
-
-
 def toDecimal(snafu):
     "Converts a SNAFU string to a number."
     result = 0
@@ -100,4 +58,50 @@ def toDecimal(snafu):
         result = result + (place * modifier)
 
     return result
+
+def toSnafu(n):
+    "Converts n (a decimal) to a SNAFU string."
+
+    if n == 0: return "0"
+
+    # digits, as numbers, in order from least significant to most
+    digits = []
+
+    # Convert to base 5, with regular digits
+
+    while n:
+        count = n % 5
+        digits.append(count)
+        n = n // 5
+
+    # Carry over values that are too big for SNAFU digits
+
+    isSingleDigit = len(digits) == 1
+
+    for i, digit in enumerate(digits):
+        if isSingleDigit:
+            break
+
+        if digit in [3, 4, 5]:
+            # When needed, add an extra digit
+            if i + 1 == len(digits): digits.append(0)
+
+            digits[i + 1] += 1
+
+    # Convert each digit to SNAFU
+
+    digits.reverse()
+    digits = [_symbols[d] for d in digits]
+    digits = [str(d) for d in digits]
+    return "".join(digits)
+
+
+_symbols = {
+        0: 0,
+        1: 1,
+        2: 2,
+        3: "=",
+        4: "-",
+        5: 0,    # 5 can occur if something carries into a 4
+}
 
