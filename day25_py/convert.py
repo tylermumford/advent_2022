@@ -21,46 +21,69 @@ class TestConvert:
         d = toDecimal(s)
         assert expect == d
 
-    @pytest.mark.parametrize(
-            "d,expect",
-            [
-                (0, "0"),
-                (1, "1"),
-                (2, "2"),
-                (10, "20"),
-                (25, "100"),
-            ])
-           # [("2=-01", 976),
-           #  ("1-0---0", 12345),
-           #  ("1121-1110-1=0", 314159265)])
-    def testToSnafu(self, d, expect):
-        s = toSnafu(d)
-        assert expect == s
+    def _toSnafuParameters():
+        yield (0, "0")
+        yield (1, "1")
+        yield (2, "2")
+        yield (3, "=")
+        yield (4, "-")
+        yield (5, "10")
+        yield (6, "11")
+        yield (7, "12")
+        yield (8, "2=")
+        yield (10, "20")
+        yield (25, "100")
+        yield (976, "2=-01")
+        yield (12345, "1-0---0")
+        yield (314159265, "1121-1110-1=0")
+
+    @pytest.mark.parametrize("decimal,expect", _toSnafuParameters())
+    def testToSnafu(self, decimal, expect):
+        s = toSnafu(decimal)
+        assert s == expect, f"Expected {decimal}->'{expect}', but got '{s}'"
 
 def toSnafu(n):
     "Converts n (decimal) to a SNAFU string."
-    if n == 0:
-        return "0"
 
-    tokens = []
-    exponent = math.floor(math.log(n, 5))
-    descending = range(exponent, -1, -1)
-    divisors = [5 ** x for x in descending]
+    if n == 0: return "0"
 
-    for divisor in divisors:
-        count, remain = divmod(n, divisor)
-        print(f"{n} // {divisor} -> {count}, {remain}")
-        if count > 0:
-            tokens.append(str(count))
-        else:
-            tokens.append(str(remain))
-            #break
+    # digits, as numbers, in order from least significant to most
+    digits = []
 
-        n = remain
+    # Convert to base 5, with regular digits
 
-        print(tokens)
+    while n:
+        count = n % 5
+        digits.append(count)
+        n = n // 5
 
-    return "".join(tokens)
+    # Convert the digits to SNAFU
+
+    singleDigit = len(digits) == 1
+    for i, digit in enumerate(digits):
+        if digit in [3, 4, 5] and not singleDigit:
+            if i + 1 == len(digits): digits.append(0)
+            digits[i + 1] += 1
+
+    symbols = {
+            0: 0,
+            1: 1,
+            2: 2,
+            3: "=",
+            4: "-",
+            5: 0,    # 5 can occur if something carries into a 4
+    }
+
+    digits.reverse()
+    print(digits)
+    digits = [symbols[d] for d in digits]
+    digits = [str(d) for d in digits]
+    return "".join(digits)
+
+def powersOfFive():
+    i = 0
+    while True:
+        yield 5 ** i
 
 
 def toDecimal(snafu):
