@@ -40,7 +40,7 @@ def _setup():
     m = Monkey(4)
     m.items = [60]
     m.operation = lambda x: x + 8
-    m.test = lambda x: x % 9 == 0
+    m.test = lambda x: x % 7 == 0
     m.trueThrowTo = 1
     m.falseThrowTo = 3
     Monkeys[4] = m

@@ -39,11 +39,15 @@ class Monkey:
 
         while len(self.items) > 0:
             # Inspect
+            startingValue = self.items[0]
             self.items[0] = self.operation(self.items[0])
+
+            newValue = self.items[0]
             self.inspectionCount += 1
 
             # Relief
             self.items[0] = self.items[0] // 3
+            relievedValue = self.items[0]
 
             # Test and throw
             hmm = self.test(self.items[0])
@@ -54,7 +58,9 @@ class Monkey:
 
             allMonkeys[catcher].catch(self.items[0])
 
-            del self.items[0]
+            self.items.pop(0)
+
+            self.log(f"{startingValue}->{newValue}->{relievedValue}->{hmm}->{catcher}")
 
     def catch(self, number):
         self.items.append(number)
