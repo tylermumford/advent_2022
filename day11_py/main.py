@@ -4,6 +4,11 @@ from pprint import pp
 from setup import Monkeys
 from setup_sample import Monkeys as SampleMonkeys
 
+
+# Credit to this Reddit comment for helping me figure out Part 2
+# u/unsourcedx
+# https://www.reddit.com/r/adventofcode/comments/ziyd5u/comment/iztfur8
+
 def main():
     # It's important to work with a copy (at least one), otherwise
     # the monkeys carry over their inspection counts.
