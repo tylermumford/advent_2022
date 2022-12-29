@@ -1,7 +1,7 @@
 import monkey
 from pprint import pp
-#from setup import Monkeys
-from setup_sample import Monkeys
+from setup import Monkeys
+#from setup_sample import Monkeys
 
 def main():
     performRounds(20)
