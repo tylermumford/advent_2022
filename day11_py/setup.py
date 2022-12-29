@@ -1,5 +1,7 @@
 from monkey import Monkey
 import pprint
+import math
+import functools
 
 Monkeys = dict()
 
@@ -68,6 +70,15 @@ def _setup():
     m.trueThrowTo = 1
     m.falseThrowTo = 4
     Monkeys[7] = m
+
+    _setModuland()
+
+def _setModuland():
+    divisors = [m.divisor for m in Monkeys.values()]
+    lcm = math.lcm(*divisors)
+    for m in Monkeys.values():
+        m.moduland = lcm
+
 _setup()
 
 if __name__ == "__main__":

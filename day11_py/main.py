@@ -1,21 +1,31 @@
 import monkey
+import copy
 from pprint import pp
 from setup import Monkeys
 from setup_sample import Monkeys as SampleMonkeys
 
 def main():
-    performRounds(20, SampleMonkeys)
-    showMonkeyBusiness(SampleMonkeys, expected=10605)
+    # It's important to work with a copy (at least one), otherwise
+    # the monkeys carry over their inspection counts.
+    p1Sample = copy.deepcopy(SampleMonkeys)
+    performRounds(20, p1Sample)
+    showMonkeyBusiness(p1Sample, expected=10605)
 
-    performRounds(20, Monkeys)
-    showMonkeyBusiness(Monkeys, expected=101436)
+    p1MyInput = copy.deepcopy(Monkeys)
+    performRounds(20, p1MyInput)
+    showMonkeyBusiness(p1MyInput, expected=101436)
 
     # Flip the toggle that enables Part 2 behavior
-    flipToggle(SampleMonkeys)
-    flipToggle(Monkeys)
+    p2Sample = copy.deepcopy(SampleMonkeys)
+    p2MyInput = copy.deepcopy(Monkeys)
+    flipToggle(p2Sample)
+    flipToggle(p2MyInput)
 
-    performRounds(10000, SampleMonkeys)
-    showMonkeyBusiness(SampleMonkeys, expected=2713310158)
+    performRounds(10000, p2Sample)
+    showMonkeyBusiness(p2Sample, expected=2713310158)
+
+    performRounds(10000, p2MyInput)
+    showMonkeyBusiness(p2MyInput, expected=19754471646)
 
 def performRounds(count, monkeyGroup):
     for i in range(0, count):

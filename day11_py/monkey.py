@@ -8,6 +8,7 @@ class Monkey:
         self.inspectionCount = 0
         self.operation = lambda : None
         self.divisor = 1
+        self.moduland = 1
         self.trueThrowTo = 0
         self.falseThrowTo = 0
         self.items = []
@@ -30,6 +31,7 @@ class Monkey:
     # 1. It inspects the item, which adjusts its worry level
     #    according to that monkey's *operation*
     # 2. You are relieved, which divides the worry level by 3
+    #    (Only in part 1)
     # 3. The monkey uses *test* to decide where to throw the item
     def turn(self, allMonkeys):
         self.log("Taking a turn")
@@ -49,8 +51,7 @@ class Monkey:
             # Relief
             if self.canDivideByThree:
                 self.items[0] = self.items[0] // 3
-            else:
-                self.items[0] = self.items[0] % self.divisor
+            self.items[0] = self.items[0] % self.moduland
             relievedValue = self.items[0]
 
             # Test and throw
