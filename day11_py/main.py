@@ -12,6 +12,8 @@ from setup_sample import Monkeys as SampleMonkeys
 def main():
     # It's important to work with a copy (at least one), otherwise
     # the monkeys carry over their inspection counts.
+    # Yeah. That was a real head-scratcher for a while.
+    # Shows what I get for using mutable state, eh?
     p1Sample = copy.deepcopy(SampleMonkeys)
     performRounds(20, p1Sample)
     showMonkeyBusiness(p1Sample, expected=10605)
