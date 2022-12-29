@@ -5,26 +5,29 @@ from setup_sample import Monkeys as SampleMonkeys
 
 def main():
     performRounds(20, SampleMonkeys)
-    showMonkeyBusiness(SampleMonkeys)
+    showMonkeyBusiness(SampleMonkeys, expected=10605)
 
     performRounds(20, Monkeys)
-    showMonkeyBusiness(Monkeys)
+    showMonkeyBusiness(Monkeys, expected=101436)
 
-    #performRounds(10000, SampleMonkeys)
-    #showMonkeyBusiness(SampleMonkeys)
+    # Flip the toggle that enables Part 2 behavior
+    flipToggle(SampleMonkeys)
+    flipToggle(Monkeys)
+
+    performRounds(10000, SampleMonkeys)
+    showMonkeyBusiness(SampleMonkeys, expected=2713310158)
 
 def performRounds(count, monkeyGroup):
     for i in range(0, count):
-        print(f"=== Round {i+1} ===")
+        if i in [0, 19, 9999]: print(f"=== Round {i+1} ===")
         allMonkeysTakeATurn(monkeyGroup)
+        if i in [0, 19, 9999]: pp(monkeyGroup)
 
 def allMonkeysTakeATurn(monkeyGroup):
     for id in monkeyGroup:
         monkeyGroup[id].turn(monkeyGroup)
 
-    pp(monkeyGroup)
-
-def showMonkeyBusiness(monkeyGroup):
+def showMonkeyBusiness(monkeyGroup, expected=None, atLeast=None):
     byInspections = sorted(
             monkeyGroup.values(),
             key=lambda m: m.inspectionCount,
@@ -35,8 +38,15 @@ def showMonkeyBusiness(monkeyGroup):
 
     print("Monkey business:", business)
 
-    assert business in [10605, 101436, 2713310158], \
-        f"Monkey business was an unexpected {business}"
+    if expected:
+        assert business == expected, "Expected " + str(expected)
+
+    if atLeast:
+        assert business > atLeast, "That number is definitely too low."
+
+def flipToggle(monkeyGroup):
+    for id in monkeyGroup:
+        monkeyGroup[id].canDivideByThree = False
 
 if __name__ == "__main__":
     main()

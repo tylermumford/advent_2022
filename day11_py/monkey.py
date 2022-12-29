@@ -12,6 +12,8 @@ class Monkey:
         self.falseThrowTo = 0
         self.items = []
 
+        self.canDivideByThree = True
+
         self.logger = logging.getLogger(__name__)
 
     def __repr__(self):
@@ -45,7 +47,10 @@ class Monkey:
             self.inspectionCount += 1
 
             # Relief
-            self.items[0] = self.items[0] // 3
+            if self.canDivideByThree:
+                self.items[0] = self.items[0] // 3
+            else:
+                self.items[0] = self.items[0] % self.divisor
             relievedValue = self.items[0]
 
             # Test and throw
@@ -59,7 +64,7 @@ class Monkey:
 
             self.items.pop(0)
 
-            self.log(f"{startingValue}->{newValue}->{relievedValue}->{hmm}->{catcher}")
+            #self.log(f"{startingValue}->{newValue}->{relievedValue}->{hmm}->{catcher}")
 
     def catch(self, number):
         self.items.append(number)
