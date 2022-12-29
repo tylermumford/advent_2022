@@ -15,4 +15,6 @@ class Monkey:
                 + f"holding {str(self.items)}"
         )
 
+    def turn(self, allMonkeys):
+        pass
 
