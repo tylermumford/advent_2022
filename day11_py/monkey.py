@@ -1,13 +1,13 @@
 import logging
 
-_level = logging.WARNING
+_level = logging.DEBUG
 
 class Monkey:
     def __init__(self, id):
         self.id = id
         self.inspectionCount = 0
         self.operation = lambda : None
-        self.test = lambda : None
+        self.divisor = 1
         self.trueThrowTo = 0
         self.falseThrowTo = 0
         self.items = []
@@ -17,8 +17,7 @@ class Monkey:
     def __repr__(self):
         return (
                 f"Monkey {str(self.id)}: "
-                + f"inspected {str(self.inspectionCount):8} times, "
-                + f"holding {str(self.items)}"
+                + f"inspected {str(self.inspectionCount):8} times"
         )
 
     def log(self, msg):
@@ -50,7 +49,7 @@ class Monkey:
             relievedValue = self.items[0]
 
             # Test and throw
-            hmm = self.test(self.items[0])
+            hmm = self.items[0] % self.divisor == 0
             if hmm == True:
                 catcher = self.trueThrowTo
             elif hmm == False:

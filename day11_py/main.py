@@ -7,6 +7,9 @@ def main():
     performRounds(20, SampleMonkeys)
     showMonkeyBusiness(SampleMonkeys)
 
+    performRounds(20, Monkeys)
+    showMonkeyBusiness(Monkeys)
+
     #performRounds(10000, SampleMonkeys)
     #showMonkeyBusiness(SampleMonkeys)
 
